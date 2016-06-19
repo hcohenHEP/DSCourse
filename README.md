@@ -10,30 +10,42 @@ These instructions will get you a copy of the project up and running on your loc
 
 The tutorial is written in IPython notebook. The code itself depends on scipy common packages such as numpy, pandas, sklearn etc..
 
-The data files should be located as follows: 
+The data files should be located as follows (or chagned via data_path variable in general module): 
+* Initial three months data should be put in local folder named **data**
+* New data for classification should be put in local folder named **new_data**
+
+### Running
+Running is through the IPython notebooks but the ruuning is also possible via the code itself.
+
+Mining
 
 ```
-initial three months data should be put in local folder named ''data''
+import mining
+import general
+general.data_path="data/"
+df = mining.preprocess_data()
 ```
 
+DTW
 ```
-new data for classification should be put in local folder named ''new_data''
-```
-
-### Installing
-
-A step by step series of examples that tell you have to get a development env running
-
-Stay what the step will be
+import dtw
+df = dtw.DTW_AJAXV()
 
 ```
-Give the example
-```
 
-And repeat
+Clustering/Labelling
 
 ```
-until finished
+import labeling
+labeling.cluster_versions()
+
+```
+
+Training BDT
+
+```
+import mva
+mva.train()
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
