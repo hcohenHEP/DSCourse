@@ -15,7 +15,7 @@ The data files should be located as follows (or chagned via data_path variable i
 * New data for classification should be put in local folder named **new_data**
 
 ### Running
-Running is through the IPython notebooks but the ruuning is also possible via the code itself.
+Running is through the IPython notebooks but also possible via the code itself.
 
 Mining
 
