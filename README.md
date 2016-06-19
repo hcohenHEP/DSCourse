@@ -8,7 +8,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisities
 
-What things you need to install the software and how to install them
+The tutorial is written in IPython notebook. The code itself depends on scipy common packages such as numpy, pandas, sklearn etc..
+
+For running the code, the initial three months data should be put in local folder named ''data''
 
 ```
 Give examples
