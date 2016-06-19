@@ -1,4 +1,12 @@
-#!/usr/bin/python
+"""
+======================================================
+Ajax
+======================================================
+This Ajax module is responsible for proper production
+version plots.
+
+Some functions are obselte and used for initial data studies.
+"""
 
 import os
 import sys

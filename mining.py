@@ -1,3 +1,12 @@
+"""
+======================================================
+Mining
+======================================================
+Main data mining module for the Microsoft AppInsights logs.
+This module reads the csv file produced daily by the system and extract
+useful information regarding the production versions deployed.
+"""
+
 import general
 import os
 import sys

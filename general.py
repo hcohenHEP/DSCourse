@@ -76,6 +76,12 @@ def get_file_names(file_name,start_time='0',end_time='0'):
     return full_files
 
 def load_df(file_name,start_time='0',end_time='0'):
+    """Returns pandas data frame for the requested data type
+
+    :param file_name: data type to load (views/ajax_events)
+    :param start_time: starting date to load from in format of YYYY-MM-DD
+    :param end_time: the ending date of loading in format of YYYY-MM-DD
+    """
     full_files = get_file_names(file_name,start_time,end_time)
     df = pd.DataFrame()
     for day in full_files:
@@ -84,20 +90,18 @@ def load_df(file_name,start_time='0',end_time='0'):
 
     return df
 
+
+
 def plot_fails(df, interval,color,q_str,max_var,prev_ax=None):
 
-    #dfi_kpi_initial = data.ix[start_time:end_time].resample(interval, how=["count"])
     df_kpi = df
     if q_str != "":
         df_kpi = df.query(q_str)
-    #Divide by the initial count so we'll know the ratio per interval
-    dfi_kpi = df_kpi.resample(interval).count() #, how=["count"])#/dfi_kpi_initial
+    dfi_kpi = df_kpi.resample(interval).count()
+
     #Check if we even got something
     if dfi_kpi.shape[0] == 0:
         return prev_ax,-1
 
     ax = dfi_kpi[max_var].plot(grid=True, linewidth=2, figsize=(20, 8), fontsize=15,ax=prev_ax,color=color)
-    #t = plt.suptitle("Prod Ver Ratio (" + ver + ")", fontsize=30)
-    #plt.ylabel("Fails")
-    #plt.savefig(ver + "_" + "_" + interval + '.png')
     return ax,np.max(dfi_kpi[max_var])

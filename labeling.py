@@ -1,3 +1,13 @@
+"""
+======================================================
+Labelling
+======================================================
+This model is responsible for labelling the mined data for different classes.
+It uses clustering in order to determine the label of each production version.
+
+The result will be saved to new data-set: DataLabeld.csv
+"""
+
 import os
 import sys
 import pandas as pd
@@ -11,7 +21,14 @@ from sklearn.preprocessing import StandardScaler
 import gc
 
 def cluster_versions():
-    #TBD - remove and document properly WORKS BEST WITHOUT THE REALLLLLY BAD VERSIONS WITH RATIO ABOVE 0.068
+    """Return the data-set (previously mined and saved at DataMined.csv) as a labelled
+       data-set. Clustering the data in the parameter-space of RatioFS and Views.
+       For now combining "Excellent" and "Good" labels to just one label.
+
+       Present the final clustering result plot and saves the labelled data to
+       DataLabeled.csv
+    """
+
     df = pd.read_csv('DataMined.csv' ,encoding='latin_1', index_col=0, parse_dates=False)
     df["Class"] = np.ones(len(df))
     data = df.ix[df.RatioFS<0.05][['RatioFS','Views']]
@@ -31,8 +48,8 @@ def cluster_versions():
 
     # plot
     plt.figure(3)
-    plt.suptitle("Versions Clustring", fontsize=15)
-    plt.scatter(X[:, 0], X[:, 1], color=colors[y_pred].tolist(), s=10)
+    plt.suptitle("Versions Clustering", fontsize=15)
+    plt.scatter(data[:, 0], data[:, 1], color=colors[y_pred].tolist(), s=10)
     plt.xlabel("Fails/Success")
     plt.ylabel("Views")
     plt.show()

@@ -1,4 +1,10 @@
-#!/usr/bin/python
+"""
+======================================================
+Views
+======================================================
+This views module is responsible for proper production
+version plots.
+"""
 
 import os
 import sys
@@ -50,7 +56,7 @@ def plot_views_version(df, interval,version,save=False):
 
     plt.legend([version],loc='best')
     plt.ylim([0,max_views ])
-    plt.suptitle("Views For: " + version, fontsize=30)
+    plt.suptitle("Views For: " + str(version)[:11], fontsize=30)
     plt.ylabel("Count")
     if save == True:
-        plt.savefig("Views" + "_" + version + "_" + interval + '.png')
+        plt.savefig("Views" + "_" + str(version)[:11] + "_" + interval + '.png')

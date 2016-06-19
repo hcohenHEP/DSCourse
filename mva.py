@@ -65,48 +65,43 @@ def train():
     dataset = np.array(df)
     labels=["Good","Faulty"]
 
-    #TBR
-    test_acc = 0
+    #Since the amount of data is very very limited we need to have a
+    #significant portion to test the algorithm on
+    pct_test = 0.45
+    #Randomize the sample selection and make sure to have enough in each class
+    num_sig_train = math.floor(pct_test * sig_len)
+    num_sig_test = len(y_truth[y_truth==1]) - num_sig_train
+    num_bkg_test = math.floor(pct_test * bkg_len)
+    num_bkg_train = bkg_len-num_bkg_test
 
-    while test_acc < 96:
-        #Since the amount of data is very very limited we need to have a
-        #significant portion to test the algorithm on
-        pct_test = 0.45
-        #Randomize the sample selection and make sure to have enough in each class
-        num_sig_train = math.floor(pct_test * sig_len)
-        num_sig_test = len(y_truth[y_truth==1]) - num_sig_train
-        num_bkg_test = math.floor(pct_test * bkg_len)
-        num_bkg_train = bkg_len-num_bkg_test
+    train_sig_i = np.random.choice(sig_len,num_sig_train,replace=False)
+    test_sig_i = np.setdiff1d(np.arange(sig_len),train_sig_i)
+    train_bkg_i = np.random.choice(bkg_len,num_bkg_train,replace=False) + sig_len
+    test_bkg_i = np.setdiff1d(np.arange(bkg_len)+sig_len,train_bkg_i)
+    train_i = np.append(train_sig_i,train_bkg_i)
+    test_i = np.append(test_sig_i,test_bkg_i)
+    train_set = dataset[train_i]
+    train_labels = y_truth[train_i]
+    test_set = dataset[test_i]
+    test_labels = y_truth[test_i]
 
-        train_sig_i = np.random.choice(sig_len,num_sig_train,replace=False)
-        test_sig_i = np.setdiff1d(np.arange(sig_len),train_sig_i)
-        train_bkg_i = np.random.choice(bkg_len,num_bkg_train,replace=False) + sig_len
-        test_bkg_i = np.setdiff1d(np.arange(bkg_len)+sig_len,train_bkg_i)
-        train_i = np.append(train_sig_i,train_bkg_i)
-        test_i = np.append(test_sig_i,test_bkg_i)
-        train_set = dataset[train_i]
-        train_labels = y_truth[train_i]
-        test_set = dataset[test_i]
-        test_labels = y_truth[test_i]
+    #dt_cls = tree.DecisionTreeClassifier(criterion='entropy', max_depth=3, min_weight_fraction_leaf=0.01)
+    dt_cls = AdaBoostClassifier(tree.DecisionTreeClassifier(criterion='entropy',
+                                                            max_depth=3, min_weight_fraction_leaf=0.01),
+                         algorithm="SAMME",
+                         n_estimators=100)
+    dt_cls.fit(train_set, train_labels)
+    pickle.dump(dt_cls,open('trained_bdt.pkl', 'wb'))
 
-        #dt_cls = tree.DecisionTreeClassifier(criterion='entropy', max_depth=3, min_weight_fraction_leaf=0.01)
-        dt_cls = AdaBoostClassifier(tree.DecisionTreeClassifier(criterion='entropy',
-                                                                max_depth=3, min_weight_fraction_leaf=0.01),
-                             algorithm="SAMME",
-                             n_estimators=100)
-        dt_cls.fit(train_set, train_labels)
-        pickle.dump(dt_cls,open('trained_bdt.pkl', 'wb'))
+    #Export 1 out off 100 trees just for visualization
+    with open("bdt.dot", 'w') as f:
+        f = tree.export_graphviz(dt_cls.estimators_[0], out_file=f, feature_names=list(df.columns), class_names=labels, filled=True, impurity=True, rounded=True)
 
-        #Export 1 out off 100 trees just for visualization
-        with open("bdt.dot", 'w') as f:
-            f = tree.export_graphviz(dt_cls.estimators_[0], out_file=f, feature_names=list(df.columns), class_names=labels, filled=True, impurity=True, rounded=True)
-
-        #Make predictions and test accuracy of the model
-        train_cls = dt_cls.predict(train_set)
-        test_cls = dt_cls.predict(test_set)
-        tr_acc = accuracy_score(train_labels, train_cls) * 100
-        ts_acc = accuracy_score(test_labels, test_cls) * 100
-        test_acc = ts_acc
+    #Make predictions and test accuracy of the model
+    train_cls = dt_cls.predict(train_set)
+    test_cls = dt_cls.predict(test_set)
+    tr_acc = accuracy_score(train_labels, train_cls) * 100
+    ts_acc = accuracy_score(test_labels, test_cls) * 100
 
     #Training CM
     confusion_mat = confusion_matrix(train_labels, train_cls)
