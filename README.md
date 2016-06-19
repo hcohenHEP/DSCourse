@@ -1,10 +1,10 @@
-# Project Title
+# Faulty Version Detector
 
-One Paragraph of project description goes here
+We present here an approach for the detection of faulty production versions using various time-series analysis and activity features. Using a three months data and a trained machine learning algorithm we were able to predict whether a deployed production version is considered faulty. This study was preformed on data provided by Microsoft compony regarding their product, Application Insights.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisities
 
