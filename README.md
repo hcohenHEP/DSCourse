@@ -58,4 +58,4 @@ mva.predict(df)
 ## Authors
 
 * **Hadar Cohen**
-* **Yuryn Lechinsky**
+* **Yury Lechinsky**
